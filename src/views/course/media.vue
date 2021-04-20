@@ -201,6 +201,7 @@
         console.log(res,file)
         this.temp.cover = URL.createObjectURL(file.raw)
       },
+
       handleFilter() {
         this.listQuery.page = 1
         this.getList()

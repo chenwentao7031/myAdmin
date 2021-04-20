@@ -164,6 +164,13 @@ export const asyncRoutes = [
         component: ()=>import('@/views/course/columns'),
         name: 'columns',
         meta: { title: '专栏' }
+      },
+      {
+        hidden: true,
+        path: '/columns/column_details',
+        component: ()=>import('@/views/course/column_details'),
+        name: 'column_details',
+        meta: { title: '专栏详情' }
       }
     ]
   },
@@ -260,18 +267,18 @@ export const asyncRoutes = [
   //   ]
   // },
   //
-  // {
-  //   path: '/tab',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/tab/index'),
-  //       name: 'Tab',
-  //       meta: { title: 'Tab', icon: 'tab' }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/tab',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/tab/index'),
+        name: 'Tab',
+        meta: { title: 'Tab', icon: 'tab' }
+      }
+    ]
+  },
   //
   // {
   //   path: '/error',
