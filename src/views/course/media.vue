@@ -66,10 +66,10 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
-          <el-button v-if="row.status!='0'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
+          <el-button v-if="row.status==0" size="mini" type="success" @click="handleModifyStatus(row,1)">
             上架
           </el-button>
-          <el-button v-if="row.status!='1'" size="mini" @click="handleModifyStatus(row,'draft')">
+          <el-button v-if="row.status==1" size="mini" @click="handleModifyStatus(row,0)">
             下架
           </el-button>
           <el-button  size="mini" type="danger" @click="handleDelete(row,$index)">
@@ -86,14 +86,18 @@
         <el-form-item label="标题" prop="title">
           <el-input v-model="temp.title" />
         </el-form-item>
-        <el-form-item label="封面" prop="timestamp">
-          <UploadSingle></UploadSingle>
+        <el-form-item label="封面" >
+          <UploadSingle
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :imgUrl="temp.cover"
+            :success="uploadCover"
+          ></UploadSingle>
         </el-form-item>
-        <el-form-item label="试看内容" prop="title">
-          <rich-text :onchange="richTextChanged(0,$event)"></rich-text>
+        <el-form-item label="试看内容" prop="content">
+          <rich-text v-model="temp.content"></rich-text>
         </el-form-item>
-        <el-form-item label="课程内容">
-          <rich-text></rich-text>
+        <el-form-item label="课程内容" prop="content">
+          <rich-text v-model="temp.content"></rich-text>
         </el-form-item>
         <el-form-item label="课程价格">
           <el-input-number v-model="temp.sub_count"  :min="1"></el-input-number> </el-form-item>
@@ -161,9 +165,8 @@
        dialogPvVisible: false,
        pvData: [],
        rules: {
-         type: [{ required: true, message: 'type is required', trigger: 'change' }],
-         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+         title: [{ required: true, message: 'title is required', trigger: 'change' }],
+         content: [{ required: true, message: 'content is required', trigger: 'change' }]
        },
        downloadLoading: false
      }
@@ -193,6 +196,10 @@
             this.listLoading = false
           }, 1.5 * 1000)
         })
+      },
+      uploadCover(res,file){
+        console.log(res,file)
+        this.temp.cover = URL.createObjectURL(file.raw)
       },
       handleFilter() {
         this.listQuery.page = 1

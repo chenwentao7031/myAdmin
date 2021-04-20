@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <tinymce @input="onchange" :height="400" :width="600"/>
+      <tinymce :value="value" @input="$emit('input',$event)" :height="400" :width="600"/>
     </div>
     <div class="editor-content" v-html="content" />
   </div>
@@ -15,7 +15,7 @@
     components: { Tinymce },
     props:{
       content: String,
-      onchange: Function
+      value: ''
     }
 
   }

@@ -1,21 +1,21 @@
 <template>
   <el-upload
     class="avatar-uploader"
-    action="https://jsonplaceholder.typicode.com/posts/"
+    :action="action || ''"
     :show-file-list="false"
-    :on-success="handleAvatarSuccess"
+    :on-success="success"
     :before-upload="beforeAvatarUpload">
-    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+    <img v-if="imgUrl" :src="imgUrl" class="avatar">
     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
   </el-upload>
 </template>
 
 <script>
   export default {
-    data() {
-      return {
-        imageUrl: ''
-      };
+    props:{
+      action: String,
+      success: Function,
+      imgUrl: String
     },
     methods: {
       handleAvatarSuccess(res, file) {
@@ -23,15 +23,16 @@
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
+        const isPNG = file.type === 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
 
-        if (!isJPG) {
+        if (!isJPG && !isPNG) {
           this.$message.error('上传头像图片只能是 JPG 格式!');
         }
         if (!isLt2M) {
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
-        return isJPG && isLt2M;
+        return (isJPG || isPNG) && isLt2M;
       }
     }
   }
