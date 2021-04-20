@@ -68,7 +68,8 @@ const defaultRole = {
   key: '',
   name: '',
   description: '',
-  routes: []
+  routes: [],
+
 }
 
 export default {
