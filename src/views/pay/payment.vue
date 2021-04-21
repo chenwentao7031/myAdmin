@@ -149,6 +149,10 @@
         })
         this.list.splice(index, 1)
       },
+      handleDetails(row) {
+        this.temp = Object.assign({}, row) // copy obj
+        this.dialogFormVisible = true
+      },
       resetTemp(){
         this.temp={
           account: '',
