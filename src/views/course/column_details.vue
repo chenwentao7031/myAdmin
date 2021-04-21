@@ -16,8 +16,8 @@
            </div>
            <div>
              <el-button-group>
-               <el-button type="warning" @click="mediaList[0].status = mediaList[0].status? 0:1">{{mediaList[0].status ? '连载中' : '已完结'}}</el-button>
-               <el-button @click="mediaList[0].isend = mediaList[0].isend? 0:1">{{mediaList[0].isend ? '连载中' : '已完结'}}</el-button>
+               <el-button size="mini" type="warning" @click="mediaList[0].status = mediaList[0].status? 0:1">{{mediaList[0].status ? '连载中' : '已完结'}}</el-button>
+               <el-button size="mini" @click="mediaList[0].isend = mediaList[0].isend? 0:1">{{mediaList[0].isend ? '连载中' : '已完结'}}</el-button>
              </el-button-group>
            </div>
          </div>
