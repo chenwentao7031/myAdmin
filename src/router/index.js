@@ -195,43 +195,40 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/permission',
+    path: '/pay',
     component: Layout,
-    redirect: '/permission/page',
+    redirect: '/pay/order',
     alwaysShow: true, // will always show the root menu
-    name: 'Permission',
+    name: 'pay',
     meta: {
-      title: 'Permission',
+      title: '交易',
       icon: 'lock',
       roles: ['admin', 'editor'] // you can set roles in root nav
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
+        path: '/pay/order',
+        name: 'order',
+        component: ()=>import('@/views/pay/order'),
         meta: {
-          title: 'Page Permission',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
+          title: '订单管理'
+        },
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
+        path: '/pay/assets',
+        name: 'assets',
+        component: ()=>import('@/views/pay/assets'),
         meta: {
-          title: 'Directive Permission'
-          // if do not set roles, means: this page does not require permission
-        }
+          title: '资产管理'
+        },
       },
       {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'RolePermission',
+        path: '/pay/payment',
+        name: 'payment',
+        component: ()=>import('@/views/pay/payment'),
         meta: {
-          title: 'Role Permission',
-          roles: ['admin']
-        }
+          title: '支付设置'
+        },
       }
     ]
   },
@@ -338,42 +335,42 @@ export const asyncRoutes = [
   //   ]
   // },
   //
-  // {
-  //   path: '/excel',
-  //   component: Layout,
-  //   redirect: '/excel/export-excel',
-  //   name: 'Excel',
-  //   meta: {
-  //     title: 'Excel',
-  //     icon: 'excel'
-  //   },
-  //   children: [
-  //     {
-  //       path: 'export-excel',
-  //       component: () => import('@/views/excel/export-excel'),
-  //       name: 'ExportExcel',
-  //       meta: { title: 'Export Excel' }
-  //     },
-  //     {
-  //       path: 'export-selected-excel',
-  //       component: () => import('@/views/excel/select-excel'),
-  //       name: 'SelectExcel',
-  //       meta: { title: 'Export Selected' }
-  //     },
-  //     {
-  //       path: 'export-merge-header',
-  //       component: () => import('@/views/excel/merge-header'),
-  //       name: 'MergeHeader',
-  //       meta: { title: 'Merge Header' }
-  //     },
-  //     {
-  //       path: 'upload-excel',
-  //       component: () => import('@/views/excel/upload-excel'),
-  //       name: 'UploadExcel',
-  //       meta: { title: 'Upload Excel' }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/excel',
+    component: Layout,
+    redirect: '/excel/export-excel',
+    name: 'Excel',
+    meta: {
+      title: 'Excel',
+      icon: 'excel'
+    },
+    children: [
+      {
+        path: 'export-excel',
+        component: () => import('@/views/excel/export-excel'),
+        name: 'ExportExcel',
+        meta: { title: 'Export Excel' }
+      },
+      {
+        path: 'export-selected-excel',
+        component: () => import('@/views/excel/select-excel'),
+        name: 'SelectExcel',
+        meta: { title: 'Export Selected' }
+      },
+      {
+        path: 'export-merge-header',
+        component: () => import('@/views/excel/merge-header'),
+        name: 'MergeHeader',
+        meta: { title: 'Merge Header' }
+      },
+      {
+        path: 'upload-excel',
+        component: () => import('@/views/excel/upload-excel'),
+        name: 'UploadExcel',
+        meta: { title: 'Upload Excel'  }
+      }
+    ]
+  },
   //
   // {
   //   path: '/zip',
