@@ -78,11 +78,15 @@
 
     <el-dialog title="提现" :visible.sync="dialogFormVisible" width="80%">
       <el-form ref="dataForm" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="课程价格">
+        <el-form-item label="提现金额">
           <el-input-number v-model="temp.price"  :min="0"></el-input-number> </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item label="体现账户">
           <el-select v-model="temp.account" placeholder="请选择" clearable  class="filter-item">
-            <el-option v-for="item in accountList" :key="item" :label="item" :value="item" />
+            <el-option v-for="item in accountList" :key="item.account" :label="item.bank" :value="item.account" >
+              <span style="margin-right: 20px">{{item.bank}}</span>
+              <span>{{item.account}}</span>
+            </el-option>
+
           </el-select>
         </el-form-item>
       </el-form>
@@ -99,7 +103,7 @@
 </template>
 
 <script>
-  import { fetchAssets, Cashout} from '@/api/pay'
+  import { fetchAssets, Cashout, fetchPayments } from '@/api/pay'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
@@ -123,18 +127,18 @@
     created() {
       this.getList()
     },
-    filters:{
-      statusFilter(status){
-        const statusMap = ['danger','success']
-      },
-    },
     methods:{
       getList(){
         this.listLoading = true
         fetchAssets(this.listQuery).then(response => {
           this.list = response.data.items
           this.total = response.data.total
-          this.accountList = response.data.items.map(item=>item.account)
+          console.log(response)
+          // Just to simulate the time of the request
+          this.listLoading = false
+        })
+        fetchPayments().then(response => {
+          this.accountList = response.data.items
           console.log(response)
           // Just to simulate the time of the request
           this.listLoading = false

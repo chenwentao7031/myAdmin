@@ -232,6 +232,44 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/marketing',
+    name: '营销',
+    component: Layout,
+    redirect: '/marketing/group',
+    alwaysShow: true, // will always show the root menu
+    meta: {
+      title: '营销',
+      icon: 'lock',
+      roles: ['admin', 'editor'],
+    },
+    children: [
+      {
+        path: 'group',
+        name: 'group',
+        component: ()=>import('@/views/marketing/group'),
+        meta: {
+          title: '拼团'
+        }
+      },
+      {
+        path: 'flashsale',
+        name: 'flashsale',
+        component: ()=>import('@/views/marketing/flashsale'),
+        meta: {
+          title: '秒杀'
+        }
+      },
+      {
+        path: 'coupon',
+        name: 'coupon',
+        component: ()=>import('@/views/marketing/coupon'),
+        meta: {
+          title: '优惠券'
+        }
+      }
+    ]
+  },
   //
   // {
   //   path: '/icon',

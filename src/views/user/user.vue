@@ -27,6 +27,7 @@
       :data="list"
       border
       fit
+      ref="dataForm"
       highlight-current-row
       style="width: 100%;"
     >
@@ -90,26 +91,115 @@
         <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key">
           <keep-alive>
             <el-table
-              ref="dataForm"
               height="300px"
               :data="modalList"
               border fit highlight-current-row
               style="width: 100%">
-              <el-table-column  label="课程标题" >
+              <template v-if="activeName === 'course'">
+                <el-table-column  label="课程标题" >
+                  <template slot-scope="{row}">
+                    <div>{{row.title}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column label="购买价格">
+                  <template slot-scope="{row}">
+                    <span>{{row.price}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="购买时间">
+                  <template slot-scope="{row}">
+                    <span>{{row.created_time}}</span>
+                  </template>
+                </el-table-column>
+              </template>
+              <template v-if="activeName === 'column'">
+                <el-table-column  label="专栏标题" >
+                  <template slot-scope="{row}">
+                    <div>{{row.title}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column label="购买价格">
+                  <template slot-scope="{row}">
+                    <span>{{row.price}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="购买时间">
+                  <template slot-scope="{row}">
+                    <span>{{row.created_time}}</span>
+                  </template>
+                </el-table-column>
+              </template>
+              <template v-if="activeName === 'order'">
+                <el-table-column  label="ID" >
+                  <template slot-scope="{row}">
+                    <div>{{row.id}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column  label="订单号" >
+                  <template slot-scope="{row}">
+                    <div>{{row.no}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column label="购买价格">
+                  <template slot-scope="{row}">
+                    <span>{{row.price}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column  label="状态" >
+                  <template slot-scope="{row}">
+                    <div>{{row.status === 'fail' ? '失败' : '成功'}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column  label="商品" >
                 <template slot-scope="{row}">
                   <div>{{row.title}}</div>
                 </template>
               </el-table-column>
-              <el-table-column label="购买价格">
-                <template slot-scope="{row}">
-                  <span>{{row.price}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="购买时间">
-                <template slot-scope="{row}">
-                  <span>{{row.created_time}}</span>
-                </template>
-              </el-table-column>
+                <el-table-column label="购买时间">
+                  <template slot-scope="{row}">
+                    <span>{{row.created_time}}</span>
+                  </template>
+                </el-table-column>
+              </template>
+              <template v-if="activeName === 'history'">
+                <el-table-column  label="课程标题" >
+                  <template slot-scope="{row}">
+                    <div>{{row.title}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column label="课程类型">
+                  <template slot-scope="{row}">
+                    <span>{{row.type}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="学习时长">
+                  <template slot-scope="{row}">
+                    <span>{{row.total_time}}</span>
+                  </template>
+                </el-table-column>
+              </template>
+              <template v-if="activeName === 'comments'">
+                <el-table-column  label="评论内容" >
+                  <template slot-scope="{row}">
+                    <div>{{row.content}}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column label="评论时间">
+                  <template slot-scope="{row}">
+                    <span>{{row.created_time}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="课程标题">
+                  <template slot-scope="{row}">
+                    <span>{{row.title}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="类型">
+                  <template slot-scope="{row}">
+                    <span>{{row.type}}</span>
+                  </template>
+                </el-table-column>
+              </template>
             </el-table>
           </keep-alive>
         </el-tab-pane>
@@ -163,6 +253,7 @@
     },
     watch: {
       activeName(val) {
+        console.log('val',val)
         switch (val) {
           case 'course':
             this.getCourse()
@@ -170,22 +261,31 @@
             fetchUserColumn().then(res=>{
               this.modalList = res.data.items
               this.modalTotal = res.data.total
+              console.log('column',res)
             })
+            break
           case 'order':
             fetchUserOrder().then(res=>{
+              console.log('order:',res)
               this.modalList = res.data.items
               this.modalTotal = res.data.total
+
             })
+            break
           case 'history':
             fetchUserHistory().then(res=>{
               this.modalList = res.data.items
               this.modalTotal = res.data.total
+              console.log('history',res)
             })
+            break
           case 'comments':
             fetchUserComment().then(res=>{
               this.modalList = res.data.items
               this.modalTotal = res.data.total
+              console.log('comments',res)
             })
+            break
           default:
             break
         }
@@ -232,6 +332,7 @@
               type: 'success',
               message: '操作成功!'
             });
+            this.$refs.dataForm.clearSelection()
           }).catch(() => {
             this.$message({
               type: 'info',
@@ -248,6 +349,7 @@
               type: 'success',
               message: '操作成功!'
             });
+            this.$refs.dataForm.clearSelection()
           }).catch(() => {
             this.$message({
               type: 'info',
@@ -284,88 +386,12 @@
         this.listQuery.page = 1
         this.getList()
       },
-      handleCreate() {
-        this.dialogFormVisible = true
-      },
-      createData() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-            this.temp.author = 'vue-element-admin'
-            createArticle(this.temp).then(() => {
-              this.list.unshift(this.temp)
-              this.dialogFormVisible = false
-              this.$notify({
-                title: 'Success',
-                message: 'Created Successfully',
-                type: 'success',
-                duration: 2000
-              })
-            })
-          }
-        })
-      },
       handleDetails(row) {
         this.temp = Object.assign({}, row) // copy obj
         this.temp.timestamp = new Date(this.temp.timestamp)
         this.dialogFormVisible = true
         this.getCourse()
       },
-      updateData() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            const tempData = Object.assign({}, this.temp)
-            tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-            updateArticle(tempData).then(() => {
-              const index = this.list.findIndex(v => v.id === this.temp.id)
-              this.list.splice(index, 1, this.temp)
-              this.dialogFormVisible = false
-              this.$notify({
-                title: 'Success',
-                message: 'Update Successfully',
-                type: 'success',
-                duration: 2000
-              })
-            })
-          }
-        })
-      },
-      handleDelete(row, index) {
-        this.$notify({
-          title: 'Success',
-          message: 'Delete Successfully',
-          type: 'success',
-          duration: 2000
-        })
-        this.list.splice(index, 1)
-      },
-      handleDownload() {
-        this.downloadLoading = true
-        import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-          const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-          const data = this.formatJson(filterVal)
-          excel.export_json_to_excel({
-            header: tHeader,
-            data,
-            filename: 'table-list'
-          })
-          this.downloadLoading = false
-        })
-      },
-      formatJson(filterVal) {
-        return this.list.map(v => filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
-        }))
-      },
-      getSortClass: function(key) {
-        const sort = this.listQuery.sort
-        return sort === `+${key}` ? 'ascending' : 'descending'
-      }
     },
     components: { Pagination }
   }

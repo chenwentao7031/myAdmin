@@ -48,7 +48,6 @@
           <span>{{row.sub_count}}</span>
         </template>
       </el-table-column>
-
       <el-table-column label="状态" width="80px" align="center">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
