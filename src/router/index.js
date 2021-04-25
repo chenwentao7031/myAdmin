@@ -270,7 +270,35 @@ export const asyncRoutes = [
       }
     ]
   },
-  //
+  {
+    path: '/setting',
+    name: '设置',
+    component: Layout,
+    redirect: '/setting/setting_index',
+    alwaysShow: true, // will always show the root menu
+    meta: {
+      title: '设置',
+      icon: 'el-icon-setting',
+      roles: ['admin', 'editor'],
+    }, children: [
+      {
+        path: 'setting_index',
+        name: 'setting_index',
+        component: ()=>import('@/views/setting/setting_index'),
+        meta: { title: '店铺设置' }
+      },{
+        path: 'staffs',
+        name: 'staffs',
+        component: ()=>import('@/views/setting/staffs'),
+        meta: { title: '员工管理' }
+      },{
+        path: 'role',
+        name: 'role',
+        component: ()=>import('@/views/setting/role'),
+        meta: { title: '角色管理' }
+      }
+    ]
+  },
   // {
   //   path: '/icon',
   //   component: Layout,
@@ -405,7 +433,7 @@ export const asyncRoutes = [
         path: 'upload-excel',
         component: () => import('@/views/excel/upload-excel'),
         name: 'UploadExcel',
-        meta: { title: 'Upload Excel'  }
+        meta: { title: 'Upload Excel' }
       }
     ]
   },
