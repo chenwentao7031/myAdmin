@@ -38,6 +38,7 @@ import nestedRouter from './modules/nested'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+// 不需要权限判断
 export const constantRoutes = [
   {
     path: '/redirect',
@@ -84,31 +85,6 @@ export const constantRoutes = [
     ]
   },
   // {
-  //   path: '/documentation',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/documentation/index'),
-  //       name: 'Documentation',
-  //       meta: { title: 'Documentation', icon: 'documentation', affix: true }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/guide',
-  //   component: Layout,
-  //   redirect: '/guide/index',
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/guide/index'),
-  //       name: 'Guide',
-  //       meta: { title: 'Guide', icon: 'guide', noCache: true }
-  //     }
-  //   ]
-  // },
-  // {
   //   path: '/profile',
   //   component: Layout,
   //   redirect: '/profile/index',
@@ -128,6 +104,7 @@ export const constantRoutes = [
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  */
+// 需要权限判断
 export const asyncRoutes = [
   {
     path: '/course',
@@ -271,6 +248,91 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/renovation',
+    name: 'renovation',
+    component: Layout,
+    redirect: '/renovation/mobile_index',
+    alwaysShow: true, // will always show the root menu
+    meta: {
+      title: '可视化',
+      icon: 'el-icon-setting',
+      roles: ['admin', 'editor'],
+    },
+    children: [
+      {
+        path: 'mobile_index',
+        name: 'mobile_index',
+        component: ()=>import('@/views/renovation/mobile_index'),
+        meta: { title: '移动端' }
+      },
+      {
+        hidden: true,
+        path: 'mobile_edit',
+        component: ()=>import('@/views/renovation/mobile_edit'),
+        name: 'mobile_edit',
+        meta: { title: '移动端装修' }
+      },
+      {
+        path: 'pc_index',
+        name: 'pc_index',
+        component: ()=>import('@/views/renovation/pc_index'),
+        meta: { title: 'PC端' }
+      },
+      {
+        hidden: true,
+        path: 'pc_edit',
+        component: ()=>import('@/views/renovation/pc_edit'),
+        name: 'mobile_edit',
+        meta: { title: 'PC端装修' }
+      },
+    ]
+  },
+  {
+    path: '/tool',
+    name: 'tool',
+    component: Layout,
+    redirect: '/tool/bbs',
+    alwaysShow: true, // will always show the root menu
+    meta: {
+      title: '工具化',
+      icon: 'el-icon-setting',
+      roles: ['admin', 'editor'],
+    },
+    children: [
+      {
+        path: 'bbs',
+        name: 'bbs',
+        component: ()=>import('@/views/tool/bbs'),
+        meta: { title: '小社群' }
+      },
+      {
+        hidden: true,
+        path: 'bbs_post',
+        component: ()=>import('@/views/tool/bbs_post'),
+        name: 'bbs_post',
+        meta: { title: '帖子列表' }
+      },
+      {
+        path: 'question',
+        name: 'question',
+        component: ()=>import('@/views/tool/question'),
+        meta: { title: '题库' }
+      },
+      {
+        path: 'testpaper',
+        name: 'testpaper',
+        component: ()=>import('@/views/tool/testpaper'),
+        meta: { title: '试卷' }
+      },
+      {
+        path: 'book',
+        name: 'book',
+        component: ()=>import('@/views/tool/book'),
+        meta: { title: '电子书' }
+      }
+    ]
+  },
+  {
     path: '/setting',
     name: '设置',
     component: Layout,
@@ -280,7 +342,8 @@ export const asyncRoutes = [
       title: '设置',
       icon: 'el-icon-setting',
       roles: ['admin', 'editor'],
-    }, children: [
+    },
+    children: [
       {
         path: 'setting_index',
         name: 'setting_index',
@@ -299,25 +362,25 @@ export const asyncRoutes = [
       }
     ]
   },
-  // {
-  //   path: '/icon',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/icons/index'),
-  //       name: 'Icons',
-  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/icon',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/icons/index'),
+        name: 'Icons',
+        meta: { title: 'Icons', icon: 'icon', noCache: true }
+      }
+    ]
+  },
   //
   /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,
   chartsRouter,
   nestedRouter,
   tableRouter,
-  //
+
   // {
   //   path: '/example',
   //   component: Layout,
@@ -349,7 +412,6 @@ export const asyncRoutes = [
   //     }
   //   ]
   // },
-  //
   {
     path: '/tab',
     component: Layout,
