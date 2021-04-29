@@ -74,7 +74,7 @@
                 </div>
               </el-form-item>
               <el-form-item label-width="0px">
-                <ul ref="courselistRef" class="course-form-list" >
+                <ul ref="listRef" class="course-form-list" style="overflow-y: auto;height: 350px">
                   <li v-for="(course, index) in temp.tempList" :key="index">
                     <!--<img src="" alt="">-->
                     <div class="course-form-list-item">
@@ -85,8 +85,8 @@
                   </li>
                 </ul>
               </el-form-item>
-
             </template>
+
             <template v-else-if="activeName === 'SwiperSlider'">
               <el-form-item label-width="0px">
                 <div class="course-form-add">
@@ -98,7 +98,7 @@
                 </div>
               </el-form-item>
              <el-form-item label-width="0px">
-               <ul style="overflow-y: auto" ref="imgRef">
+               <ul style="overflow-y: hidden;height: 600px" ref="listRef">
                 <li v-for="(item, index) in temp.tempList" :key="index" style="text-align: center">
                   <div style="height: 150px;background-color: #aaa"></div>
                   <el-select v-model="item.hrefType" placeholder="商品状态" clearable style="margin: 15px 0" >
@@ -109,9 +109,40 @@
                     <div v-if="item.hrefType==='course'" ><el-button type="primary" size="mini">关联课程</el-button></div>
                     <div v-else><el-input placeholder="请输入要跳转的路径" style="width: 200px" size="mini"></el-input></div>
                   </div>
+                  <i class="el-icon-delete"></i>
                 </li>
                </ul>
              </el-form-item>
+            </template>
+
+            <template v-else-if="activeName === 'IconType'">
+              <el-form-item label-width="0px">
+                <div class="course-form-add">
+                  <div @click="FormAddIcon" style="cursor: pointer">
+                    <i class="el-icon-circle-plus-outline" style="color: #409EFF;margin-right: 4px;margin-bottom: 15px"></i>
+                    新增分类
+                  </div>
+                  <div>最多8张</div>
+                </div>
+              </el-form-item>
+              <el-form-item label-width="0px">
+                <ul style="overflow-y: auto;height: 600px" ref="listRef">
+                  <li v-for="(item, index) in temp.tempList" :key="index" style="text-align: center; display: flex;justify-content: space-between;padding: 10px;background-color: #eee;margin-bottom: 10px">
+                   <div style="width: 150px">
+                     <el-input size="mini" v-model="item.title" ></el-input>
+                     <el-select v-model="item.hrefType" placeholder="商品状态" size="mini" clearable style="margin: 15px 0" >
+                       <el-option label="关联课程" value="course" />
+                       <el-option label="网页跳转" value="url" />
+                     </el-select>
+                     <div v-if="item.hrefType">
+                       <div v-if="item.hrefType==='course'" ><el-button type="primary" size="mini">关联课程</el-button></div>
+                       <div v-else><el-input placeholder="请输入要跳转的路径"  size="mini"></el-input></div>
+                     </div>
+                   </div>
+                    <i class="el-icon-delete" @click="FormDelCourse(index)"></i>
+                  </li>
+                </ul>
+              </el-form-item>
             </template>
           </el-form>
         </el-card>
@@ -194,19 +225,11 @@
       activeName () {
         let index = this.list.findIndex(item => item.isEdit)
         this.temp = Object.assign({}, this.resetTemp(),  this.list[index].data)
-        if(this.activeName === 'CourseList'){
+        if(this.temp.tempList){
           this.oldList = this.temp.tempList.map(v => v)
           this.newList = this.oldList.slice()
           this.$nextTick(() => {
-            console.log(this.$refs)
-            this.setSort(this.$refs.courselistRef)
-          })
-        }else if (this.activeName === 'SwiperSlider'){
-          this.oldList = this.temp.tempList.map(v => v)
-          this.newList = this.oldList.slice()
-          this.$nextTick(() => {
-            console.log(this.$refs)
-            this.setSort(this.$refs.imgRef)
+            this.setSort(this.$refs.listRef)
           })
         }
       },
@@ -228,6 +251,16 @@
       addClass (item) {
         this.list.forEach(item => item.isEdit = false)
         item.isEdit = true
+
+        let index = this.list.findIndex(item => item.isEdit)
+        this.temp = Object.assign({}, this.resetTemp(),  this.list[index].data)
+        if(this.temp.tempList){
+          this.oldList = this.temp.tempList.map(v => v)
+          this.newList = this.oldList.slice()
+          this.$nextTick(() => {
+            this.setSort(this.$refs.listRef)
+          })
+        }
       },
       handlePrev (item, index) {
         this.list.splice(index, 1)
@@ -253,6 +286,11 @@
           this.temp.tempList.push({url: Date.now()})
         }
       },
+      FormAddIcon(){
+        if(this.temp.tempList.length <8){
+          this.temp.tempList.push({title:'分类'})
+        }
+      },
       resetTemp (type = this.activeName) {
         switch (type) {
           case 'CourseList':
@@ -265,7 +303,7 @@
             return { tempList: [] }
             break
           case 'IconType':
-            return {}
+            return {tempList: [{title:'分类'},{title:'分类'},{title:'分类'},{title:'分类'}]}
             break
           case 'Onsale':
             return {}
@@ -282,7 +320,6 @@
         }
       },
       setSort(el) {
-
         this.sortable = Sortable.create(el, {
           ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
           setData: function(dataTransfer) {
@@ -316,7 +353,7 @@
   }
 
   .card-container {
-    height: 80vh;
+    min-height: 80vh;
     overflow: inherit;
     /*overflow-y: auto;*/
   }
