@@ -10,8 +10,8 @@
         :href="value.moreURL.url">查看全部</el-link>
     </div>
     <el-row>
-      <template v-if="value.courseList.length" >
-        <el-col :span="value.column ? 12:24" v-for="index in value.courseList" :class="value.column ? 'course-item-two' : 'course-item-one'">
+      <template v-if="value.tempList.length" >
+        <el-col :span="value.column ? 12:24" v-for="index in value.tempList" :class="value.column ? 'course-item-two' : 'course-item-one'">
             <img src="" style="width: 130px;height: 65px;margin-right: 10px">
             <div class="course-info">
               <div style="font-size: 16px;">xxxxx{{value.column}}</div>
@@ -32,23 +32,6 @@
     name: 'course-list',
     props: {
       value: Object,
-      courseList: {
-        type: Array,
-        default: ()=>{return []}
-      },
-      title: {
-        type: String,
-        default: '最新列表'
-      },
-      column: {
-        type:Number,
-        default: 0,
-      },
-      more: {
-        type:Boolean,
-        default: true,
-      },
-      moreURL: String
     }
   }
 </script>

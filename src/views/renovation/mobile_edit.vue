@@ -39,7 +39,7 @@
         </el-card>
       </el-col>
       <el-col :span="6" :offset="4" v-show="activeName">
-        <el-card class="card-container" :body-style="{padding:'0'}">
+        <el-card class="card-container" :body-style="{padding:'0'}" >
           <div slot="header" class="clearfix">组件编辑</div>
           <el-form ref="form" :model="temp" label-width="80px" >
             <template v-if="activeName === 'SearchInput'">
@@ -74,8 +74,8 @@
                 </div>
               </el-form-item>
               <el-form-item label-width="0px">
-                <ul class="course-form-list" ref="courseRef">
-                  <li v-for="(course, index) in temp.courseList" :key="course.title">
+                <ul ref="courselistRef" class="course-form-list" >
+                  <li v-for="(course, index) in temp.tempList" :key="index">
                     <!--<img src="" alt="">-->
                     <div class="course-form-list-item">
                       <div style="width: 100px;height: 50px; background-color: #888;margin-right: 5px">img</div>
@@ -86,6 +86,32 @@
                 </ul>
               </el-form-item>
 
+            </template>
+            <template v-else-if="activeName === 'SwiperSlider'">
+              <el-form-item label-width="0px">
+                <div class="course-form-add">
+                  <div @click="FormAddImg" style="cursor: pointer">
+                    <i class="el-icon-circle-plus-outline" style="color: #409EFF;margin-right: 4px;margin-bottom: 15px"></i>
+                    新增轮播图
+                  </div>
+                  <div>最多5张</div>
+                </div>
+              </el-form-item>
+             <el-form-item label-width="0px">
+               <ul style="overflow-y: auto" ref="imgRef">
+                <li v-for="(item, index) in temp.tempList" :key="index" style="text-align: center">
+                  <div style="height: 150px;background-color: #aaa"></div>
+                  <el-select v-model="item.hrefType" placeholder="商品状态" clearable style="margin: 15px 0" >
+                    <el-option label="关联课程" value="course" />
+                    <el-option label="网页跳转" value="url" />
+                  </el-select>
+                  <div v-if="item.hrefType">
+                    <div v-if="item.hrefType==='course'" ><el-button type="primary" size="mini">关联课程</el-button></div>
+                    <div v-else><el-input placeholder="请输入要跳转的路径" style="width: 200px" size="mini"></el-input></div>
+                  </div>
+                </li>
+               </ul>
+             </el-form-item>
             </template>
           </el-form>
         </el-card>
@@ -98,6 +124,11 @@
 <script>
   import SearchInput from './components/SearchInput'
   import CourseList from './components/CourseList'
+  import SwiperSlider from './components/SwiperSlider'
+  import IconType from './components/IconType'
+  import Onsale from './components/OnSale'
+  import FlashGrop from './components/FlashGroup'
+  import ImgAdv from './components/ImgAdv'
   import Sortable from 'sortablejs'
 
   export default {
@@ -143,7 +174,7 @@
           }
         ],
         activeName: null,
-        temp: {},
+        temp: {moreURL:{}},
         sortable: null,
         oldList: [],
         newList: []
@@ -164,10 +195,18 @@
         let index = this.list.findIndex(item => item.isEdit)
         this.temp = Object.assign({}, this.resetTemp(),  this.list[index].data)
         if(this.activeName === 'CourseList'){
-          this.oldList = this.temp.courseList.map(v => v)
+          this.oldList = this.temp.tempList.map(v => v)
           this.newList = this.oldList.slice()
           this.$nextTick(() => {
-            this.setSort()
+            console.log(this.$refs)
+            this.setSort(this.$refs.courselistRef)
+          })
+        }else if (this.activeName === 'SwiperSlider'){
+          this.oldList = this.temp.tempList.map(v => v)
+          this.newList = this.oldList.slice()
+          this.$nextTick(() => {
+            console.log(this.$refs)
+            this.setSort(this.$refs.imgRef)
           })
         }
       },
@@ -202,26 +241,48 @@
         this.list.splice(index, 1)
       },
       FormAddCourse(){
-        this.temp.courseList.push({title: Date.now()})
+        if( this.temp.tempList.length < 10){
+          this.temp.tempList.push({title: Date.now()})
+        }
       },
       FormDelCourse(index){
-        this.temp.courseList.splice(index,1)
+        this.temp.tempList.splice(index,1)
+      },
+      FormAddImg(){
+        if(this.temp.tempList.length <5){
+          this.temp.tempList.push({url: Date.now()})
+        }
       },
       resetTemp (type = this.activeName) {
         switch (type) {
           case 'CourseList':
-            return { courseList: [], title: '最新列表', column: 0, more: true, moreURL: { title: '选择页面', url: '' } }
+            return { tempList: [], title: '最新列表', column: 0, more: true, moreURL: { title: '选择页面', url: '' } }
             break
           case 'SearchInput':
             return { value: '请输入搜索关键词' }
+            break
+          case 'SwiperSlider':
+            return { tempList: [] }
+            break
+          case 'IconType':
+            return {}
+            break
+          case 'Onsale':
+            return {}
+            break
+          case 'FlashGroup':
+            return {}
+            break
+          case 'ImgAdv':
+            return {}
             break
           default:
             return {}
             break
         }
       },
-      setSort() {
-        const el = this.$refs.courseRef
+      setSort(el) {
+
         this.sortable = Sortable.create(el, {
           ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
           setData: function(dataTransfer) {
@@ -230,8 +291,8 @@
             dataTransfer.setData('Text', '')
           },
           onEnd: evt => {
-            const targetRow =this.temp.courseList.splice(evt.oldIndex, 1)[0]
-            this.temp.courseList.splice(evt.newIndex, 0, targetRow)
+            const targetRow =this.temp.tempList.splice(evt.oldIndex, 1)[0]
+            this.temp.tempList.splice(evt.newIndex, 0, targetRow)
 
             const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
             this.newList.splice(evt.newIndex, 0, tempIndex)
@@ -240,7 +301,7 @@
       }
     },
     components: {
-      SearchInput, CourseList
+      SearchInput, CourseList, SwiperSlider, Onsale,IconType, ImgAdv,FlashGrop
     }
   }
 </script>
